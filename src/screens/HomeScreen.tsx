@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
-  FlatList,
   StyleSheet,
   Text,
   TextInput,
@@ -12,6 +11,7 @@ import PokemonCard from "../components/PokemonCard";
 import { PAGE_SIZE, PokemonListItem, fetchPage, idFromUrl } from "../utils/pokeapi";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "../../App";
+import { FlashList } from "@shopify/flash-list";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 
@@ -87,13 +87,13 @@ const renderItem = useCallback(
           <Text style={{ color: "crimson" }}>{error}</Text>
         </View>
       ) : (
-        <FlatList
+        <FlashList
           data={filtered}
           keyExtractor={(item) => String(idFromUrl(item.url))}
           refreshing={refreshing}
           onRefresh={onRefresh}
           renderItem={renderItem}
-          onEndReachedThreshold={0.5}
+          onEndReachedThreshold={0.2}
           onEndReached={() => {
             if (!loading && query.length === 0) load(offset);
           }}

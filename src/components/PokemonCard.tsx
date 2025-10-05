@@ -1,5 +1,7 @@
-import React from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Image } from "expo-image";
+import { MaterialIcons } from "@expo/vector-icons"; 
 import { artworkUri, idFromUrl } from "../utils/pokeapi";
 
 type Props = {
@@ -10,13 +12,33 @@ type Props = {
 
 function PokemonCard({ name, url, onPress }: Props) {
   const id = idFromUrl(url);
+  const [loaded, setLoaded] = useState(false);
+  const [errored, setErrored] = useState(false);
+
   return (
     <Pressable onPress={() => onPress(id, name)} style={styles.card}>
-      <Image
-        source={{ uri: artworkUri(id) }}
-        style={styles.image}
-        resizeMode="contain"
-      />
+      <View style={styles.imageBox}>
+        {(!loaded || errored) && (
+          <MaterialIcons
+            name={errored ? "broken-image" : "image"}
+            size={36}
+            color="#b0b0b0"
+          />
+        )}
+
+        <Image
+          priority="high"
+          style={styles.image}
+          source={{ uri: artworkUri(id) }}
+          contentFit="contain"
+          transition={150}
+          cachePolicy="memory-disk"
+          recyclingKey={String(id)}
+          onLoad={() => setLoaded(true)}
+          onError={() => setErrored(true)}
+        />
+      </View>
+
       <View style={{ flex: 1 }}>
         <Text style={styles.number}>#{String(id).padStart(4, "0")}</Text>
         <Text style={styles.name}>{capitalize(name)}</Text>
@@ -39,8 +61,23 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 16,
     elevation: 2,
+    gap: 12,
   },
-  image: { width: 72, height: 72 },
+  imageBox: {
+    width: 72,
+    height: 72,
+    borderRadius: 12,
+    backgroundColor: "#f2f2f2",
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
+  },
+  image: {
+    position: "absolute",
+    top: 0, left: 0, right: 0, bottom: 0,
+    width: "100%",
+    height: "100%",
+  },
   number: { color: "#777", fontSize: 12, marginBottom: 4 },
   name: { fontSize: 18, fontWeight: "600" },
 });
