@@ -11,8 +11,9 @@ yarn-error.log*
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
-# Keep cache out unless you use Zero-Installs
+# Keep out unless you use Zero-Installs
 .yarn/cache/
+.yarn/install-state.gz
 
 # Optional if you ever switch to PnP
 .pnp.*
