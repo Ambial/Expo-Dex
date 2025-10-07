@@ -8,7 +8,12 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import PokemonCard from "../components/PokemonCard";
-import { PAGE_SIZE, PokemonListItem, fetchPage, idFromUrl } from "../utils/pokeapi";
+import {
+  PAGE_SIZE,
+  PokemonListItem,
+  fetchPage,
+  idFromUrl,
+} from "../utils/pokeapi";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "../../App";
 import { FlashList } from "@shopify/flash-list";
@@ -23,22 +28,19 @@ export default function HomeScreen({ navigation }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState("");
 
-  const load = useCallback(
-    async (nextOffset: number, replace = false) => {
-      setLoading(true);
-      setError(null);
-      try {
-        const page = await fetchPage(nextOffset);
-        setItems(prev => (replace ? page : [...prev, ...page]));
-        setOffset(nextOffset + PAGE_SIZE);
-      } catch (e: any) {
-        setError(e.message ?? "Network error");
-      } finally {
-        setLoading(false);
-      }
-    },
-    []
-  );
+  const load = useCallback(async (nextOffset: number, replace = false) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const page = await fetchPage(nextOffset);
+      setItems((prev) => (replace ? page : [...prev, ...page]));
+      setOffset(nextOffset + PAGE_SIZE);
+    } catch (e: any) {
+      setError(e.message ?? "Network error");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     load(0, true);
@@ -53,20 +55,20 @@ export default function HomeScreen({ navigation }: Props) {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return items;
-    return items.filter(p => p.name.includes(q));
+    return items.filter((p) => p.name.includes(q));
   }, [items, query]);
 
   const onCardPress = useCallback(
-  (id: number, name: string) => navigation.navigate("Details", { id, name }),
-  [navigation]
-);
+    (id: number, name: string) => navigation.navigate("Details", { id, name }),
+    [navigation]
+  );
 
-const renderItem = useCallback(
-  ({ item }: { item: PokemonListItem }) => (
-    <PokemonCard name={item.name} url={item.url} onPress={onCardPress} />
-  ),
-  [onCardPress]
-);
+  const renderItem = useCallback(
+    ({ item }: { item: PokemonListItem }) => (
+      <PokemonCard name={item.name} url={item.url} onPress={onCardPress} />
+    ),
+    [onCardPress]
+  );
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -98,7 +100,9 @@ const renderItem = useCallback(
             if (!loading && query.length === 0) load(offset);
           }}
           ListFooterComponent={
-            loading ? <ActivityIndicator style={{ marginVertical: 16 }} /> : null
+            loading ? (
+              <ActivityIndicator style={{ marginVertical: 16 }} />
+            ) : null
           }
           ListEmptyComponent={
             loading ? null : (

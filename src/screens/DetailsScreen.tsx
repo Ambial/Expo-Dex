@@ -33,7 +33,9 @@ export default function DetailsScreen({ route }: Props) {
   if (error) {
     return (
       <SafeAreaView style={styles.safe}>
-        <View style={styles.center}><Text style={{ color: "crimson" }}>{error}</Text></View>
+        <View style={styles.center}>
+          <Text style={{ color: "crimson" }}>{error}</Text>
+        </View>
       </SafeAreaView>
     );
   }
@@ -41,7 +43,9 @@ export default function DetailsScreen({ route }: Props) {
   if (!data) {
     return (
       <SafeAreaView style={styles.safe}>
-        <View style={styles.center}><ActivityIndicator /></View>
+        <View style={styles.center}>
+          <ActivityIndicator />
+        </View>
       </SafeAreaView>
     );
   }
@@ -108,6 +112,15 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   sectionTitle: { fontSize: 16, fontWeight: "700", marginBottom: 6 },
-  statRow: { flexDirection: "row", justifyContent: "space-between", paddingVertical: 4 },
-  center: { flex: 1, alignItems: "center", justifyContent: "center", padding: 24 },
+  statRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: 4,
+  },
+  center: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 24,
+  },
 });
