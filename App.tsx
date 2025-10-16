@@ -1,14 +1,17 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { SafeAreaProvider } from "react-native-safe-area-context"; // ⬅️ add
-
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import HomeScreen from "./src/screens/HomeScreen";
 import DetailsScreen from "./src/screens/DetailsScreen";
+import SettingsScreen from "./src/screens/SettingsScreen";
+import { Pressable } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export type RootStackParamList = {
   Home: undefined;
   Details: { id: number; name: string };
+  Settings: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -18,8 +21,34 @@ export default function App() {
     <SafeAreaProvider>
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="Home" component={HomeScreen} options={{ title: "Pokédex" }} />
-          <Stack.Screen name="Details" component={DetailsScreen} options={({ route }) => ({ title: route.params.name })} />
+          <Stack.Screen
+            name="Home"
+            component={HomeScreen}
+            options={({ navigation }) => ({
+              title: "Pokédex",
+              headerRight: () => (
+                <Pressable
+                  onPress={() => navigation.navigate("Settings")}
+                  hitSlop={10}
+                  accessibilityRole="button"
+                  accessibilityLabel="Open settings"
+                  style={{ paddingHorizontal: 4 }}
+                >
+                  <MaterialIcons name="settings" size={22} />
+                </Pressable>
+              ),
+            })}
+          />
+          <Stack.Screen
+            name="Details"
+            component={DetailsScreen}
+            options={({ route }) => ({ title: route.params.name })}
+          />
+          <Stack.Screen
+            name="Settings"
+            component={SettingsScreen}
+            options={{ title: "Settings" }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
