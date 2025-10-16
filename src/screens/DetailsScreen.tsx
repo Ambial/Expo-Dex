@@ -12,13 +12,13 @@ import { artworkUri, fetchDetails, PokemonDetails } from "../utils/pokeapi";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "../../App";
 import { useAppTheme } from "../theme/ThemeProvider";
-import { Colors } from "../theme/colors";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Details">;
 
 export default function DetailsScreen({ route }: Props) {
   const { colors } = useAppTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
+
   const { id, name } = route.params;
   const [data, setData] = useState<PokemonDetails | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -38,7 +38,7 @@ export default function DetailsScreen({ route }: Props) {
     return (
       <SafeAreaView style={styles.safe}>
         <View style={styles.center}>
-          <Text style={{ color: "crimson" }}>{error}</Text>
+          <Text style={styles.error}>{error}</Text>
         </View>
       </SafeAreaView>
     );
@@ -48,7 +48,7 @@ export default function DetailsScreen({ route }: Props) {
     return (
       <SafeAreaView style={styles.safe}>
         <View style={styles.center}>
-          <ActivityIndicator />
+          <ActivityIndicator color={colors.tint} />
         </View>
       </SafeAreaView>
     );
@@ -72,16 +72,16 @@ export default function DetailsScreen({ route }: Props) {
 
         <View style={styles.card}>
           <Text style={styles.sectionTitle}>Info</Text>
-          <Text>Height: {data.height / 10} m</Text>
-          <Text>Weight: {data.weight / 10} kg</Text>
+          <Text style={styles.p}>Height: {data.height / 10} m</Text>
+          <Text style={styles.p}>Weight: {data.weight / 10} kg</Text>
         </View>
 
         <View style={styles.card}>
           <Text style={styles.sectionTitle}>Base Stats</Text>
           {data.stats.map((s) => (
             <View key={s.stat.name} style={styles.statRow}>
-              <Text style={{ width: 120 }}>{capitalize(s.stat.name)}</Text>
-              <Text style={{ fontWeight: "700" }}>{s.base_stat}</Text>
+              <Text style={styles.statName}>{capitalize(s.stat.name)}</Text>
+              <Text style={styles.statValue}>{s.base_stat}</Text>
             </View>
           ))}
         </View>
@@ -94,40 +94,6 @@ function capitalize(s: string) {
   return s[0].toUpperCase() + s.slice(1);
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#f4f5f7" },
-  container: { padding: 16, alignItems: "center" },
-  art: { width: 220, height: 220, marginVertical: 8 },
-  title: { fontSize: 22, fontWeight: "800", marginBottom: 8 },
-  row: { flexDirection: "row", gap: 8, marginBottom: 12 },
-  typeTag: {
-    backgroundColor: "#e8eef9",
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 999,
-  },
-  typeText: { fontWeight: "600" },
-  card: {
-    width: "100%",
-    backgroundColor: "#fff",
-    padding: 16,
-    borderRadius: 16,
-    marginVertical: 6,
-    gap: 6,
-  },
-  sectionTitle: { fontSize: 16, fontWeight: "700", marginBottom: 6 },
-  statRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingVertical: 4,
-  },
-  center: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 24,
-  },
-});
 const makeStyles = (c: import("../theme/colors").Colors) =>
   StyleSheet.create({
     safe: { flex: 1, backgroundColor: c.background },
@@ -158,15 +124,19 @@ const makeStyles = (c: import("../theme/colors").Colors) =>
       marginBottom: 6,
       color: c.text,
     },
+    p: { color: c.text },
     statRow: {
       flexDirection: "row",
       justifyContent: "space-between",
       paddingVertical: 4,
     },
+    statName: { width: 120, color: c.text },
+    statValue: { fontWeight: "700", color: c.text },
     center: {
       flex: 1,
       alignItems: "center",
       justifyContent: "center",
       padding: 24,
     },
+    error: { color: c.danger },
   });

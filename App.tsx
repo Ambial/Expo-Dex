@@ -19,13 +19,19 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function AppInner() {
-  const { navTheme, isDark } = useAppTheme();
+  const { navTheme, isDark, colors } = useAppTheme();
 
   return (
     <>
       <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
       <NavigationContainer theme={navTheme}>
-        <Stack.Navigator>
+        <Stack.Navigator
+          screenOptions={{
+            headerStyle: { backgroundColor: colors.surface },
+            headerTintColor: colors.text,
+            headerTitleStyle: { color: colors.text },
+          }}
+        >
           <Stack.Screen
             name="Home"
             component={HomeScreen}
@@ -39,7 +45,7 @@ function AppInner() {
                   accessibilityLabel="Open settings"
                   style={{ paddingHorizontal: 4 }}
                 >
-                  <MaterialIcons name="settings" size={22} />
+                  <MaterialIcons name="settings" size={22} color={colors.text} />
                 </Pressable>
               ),
             })}

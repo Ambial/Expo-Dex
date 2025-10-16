@@ -85,12 +85,14 @@ export default function HomeScreen({ navigation }: Props) {
           autoCorrect={false}
           autoCapitalize="none"
           clearButtonMode="while-editing"
+          placeholderTextColor={colors.textMuted}
+          selectionColor={colors.tint}
         />
       </View>
 
       {error ? (
         <View style={styles.center}>
-          <Text style={{ color: "crimson" }}>{error}</Text>
+          <Text style={styles.error}>{error}</Text>
         </View>
       ) : (
         <FlashList
@@ -111,7 +113,7 @@ export default function HomeScreen({ navigation }: Props) {
           ListEmptyComponent={
             loading ? null : (
               <View style={styles.center}>
-                <Text>No Pokémon found.</Text>
+                <Text style={styles.text}>No Pokémon found.</Text>
               </View>
             )
           }
@@ -121,22 +123,6 @@ export default function HomeScreen({ navigation }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#f4f5f7" },
-  searchRow: {
-    paddingHorizontal: 12,
-    paddingTop: 8,
-    paddingBottom: 4,
-  },
-  search: {
-    backgroundColor: "#fff",
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderRadius: 12,
-    fontSize: 16,
-  },
-  center: { alignItems: "center", justifyContent: "center", padding: 24 },
-});
 const makeStyles = (c: import("../theme/colors").Colors) =>
   StyleSheet.create({
     safe: { flex: 1, backgroundColor: c.background },
@@ -152,4 +138,6 @@ const makeStyles = (c: import("../theme/colors").Colors) =>
       borderColor: c.border,
     },
     center: { alignItems: "center", justifyContent: "center", padding: 24 },
+    text: { color: c.text },
+    error: { color: c.danger },
   });
