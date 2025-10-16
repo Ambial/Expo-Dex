@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Image } from "expo-image";
 import { MaterialIcons } from "@expo/vector-icons";
 import { artworkUri, idFromUrl } from "../utils/pokeapi";
+import { useAppTheme } from "../theme/ThemeProvider";
 
 type Props = {
   name: string;
@@ -14,6 +15,8 @@ function PokemonCard({ name, url, onPress }: Props) {
   const id = idFromUrl(url);
   const [loaded, setLoaded] = useState(false);
   const [errored, setErrored] = useState(false);
+  const { colors } = useAppTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
 
   return (
     <Pressable onPress={() => onPress(id, name)} style={styles.card}>
@@ -22,10 +25,9 @@ function PokemonCard({ name, url, onPress }: Props) {
           <MaterialIcons
             name={errored ? "broken-image" : "image"}
             size={36}
-            color="#b0b0b0"
+            color={colors.textMuted}
           />
         )}
-
         <Image
           priority="high"
           style={styles.image}
@@ -47,42 +49,45 @@ function PokemonCard({ name, url, onPress }: Props) {
   );
 }
 
+const makeStyles = (c: import("../theme/colors").Colors) =>
+  StyleSheet.create({
+    card: {
+      flexDirection: "row",
+      alignItems: "center",
+      padding: 12,
+      marginHorizontal: 12,
+      marginVertical: 6,
+      backgroundColor: c.surface,
+      borderRadius: 16,
+      elevation: 2,
+      gap: 12,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: c.border,
+    },
+    imageBox: {
+      width: 72,
+      height: 72,
+      borderRadius: 12,
+      backgroundColor: c.surfaceAlt,
+      alignItems: "center",
+      justifyContent: "center",
+      overflow: "hidden",
+    },
+    image: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      width: "100%",
+      height: "100%",
+    },
+    number: { color: c.textMuted, fontSize: 12, marginBottom: 4 },
+    name: { fontSize: 18, fontWeight: "600", color: c.text },
+  });
+
 function capitalize(s: string) {
   return s[0].toUpperCase() + s.slice(1);
 }
-
-const styles = StyleSheet.create({
-  card: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 12,
-    marginHorizontal: 12,
-    marginVertical: 6,
-    backgroundColor: "#fff",
-    borderRadius: 16,
-    elevation: 2,
-    gap: 12,
-  },
-  imageBox: {
-    width: 72,
-    height: 72,
-    borderRadius: 12,
-    backgroundColor: "#f2f2f2",
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
-  },
-  image: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    width: "100%",
-    height: "100%",
-  },
-  number: { color: "#777", fontSize: 12, marginBottom: 4 },
-  name: { fontSize: 18, fontWeight: "600" },
-});
 
 export default React.memo(PokemonCard);

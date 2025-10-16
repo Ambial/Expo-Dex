@@ -17,6 +17,8 @@ import {
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "../../App";
 import { FlashList } from "@shopify/flash-list";
+import { useAppTheme } from "../theme/ThemeProvider";
+import { Colors } from "../theme/colors";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 
@@ -27,6 +29,8 @@ export default function HomeScreen({ navigation }: Props) {
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState("");
+  const { colors } = useAppTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
 
   const load = useCallback(async (nextOffset: number, replace = false) => {
     setLoading(true);
@@ -133,3 +137,19 @@ const styles = StyleSheet.create({
   },
   center: { alignItems: "center", justifyContent: "center", padding: 24 },
 });
+const makeStyles = (c: import("../theme/colors").Colors) =>
+  StyleSheet.create({
+    safe: { flex: 1, backgroundColor: c.background },
+    searchRow: { paddingHorizontal: 12, paddingTop: 8, paddingBottom: 4 },
+    search: {
+      backgroundColor: c.surface,
+      paddingHorizontal: 14,
+      paddingVertical: 10,
+      borderRadius: 12,
+      fontSize: 16,
+      color: c.text,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: c.border,
+    },
+    center: { alignItems: "center", justifyContent: "center", padding: 24 },
+  });

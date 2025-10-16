@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Image,
@@ -11,10 +11,14 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { artworkUri, fetchDetails, PokemonDetails } from "../utils/pokeapi";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "../../App";
+import { useAppTheme } from "../theme/ThemeProvider";
+import { Colors } from "../theme/colors";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Details">;
 
 export default function DetailsScreen({ route }: Props) {
+  const { colors } = useAppTheme();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   const { id, name } = route.params;
   const [data, setData] = useState<PokemonDetails | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -124,3 +128,45 @@ const styles = StyleSheet.create({
     padding: 24,
   },
 });
+const makeStyles = (c: import("../theme/colors").Colors) =>
+  StyleSheet.create({
+    safe: { flex: 1, backgroundColor: c.background },
+    container: { padding: 16, alignItems: "center" },
+    art: { width: 220, height: 220, marginVertical: 8 },
+    title: { fontSize: 22, fontWeight: "800", marginBottom: 8, color: c.text },
+    row: { flexDirection: "row", gap: 8, marginBottom: 12 },
+    typeTag: {
+      backgroundColor: c.chip,
+      paddingHorizontal: 10,
+      paddingVertical: 6,
+      borderRadius: 999,
+    },
+    typeText: { fontWeight: "600", color: c.text },
+    card: {
+      width: "100%",
+      backgroundColor: c.surface,
+      padding: 16,
+      borderRadius: 16,
+      marginVertical: 6,
+      gap: 6,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: c.border,
+    },
+    sectionTitle: {
+      fontSize: 16,
+      fontWeight: "700",
+      marginBottom: 6,
+      color: c.text,
+    },
+    statRow: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      paddingVertical: 4,
+    },
+    center: {
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
+      padding: 24,
+    },
+  });

@@ -2,11 +2,13 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { Pressable, StatusBar } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
+
 import HomeScreen from "./src/screens/HomeScreen";
 import DetailsScreen from "./src/screens/DetailsScreen";
 import SettingsScreen from "./src/screens/SettingsScreen";
-import { Pressable } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
+import { ThemeProvider, useAppTheme } from "./src/theme/ThemeProvider";
 
 export type RootStackParamList = {
   Home: undefined;
@@ -16,10 +18,13 @@ export type RootStackParamList = {
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-export default function App() {
+function AppInner() {
+  const { navTheme, isDark } = useAppTheme();
+
   return (
-    <SafeAreaProvider>
-      <NavigationContainer>
+    <>
+      <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
+      <NavigationContainer theme={navTheme}>
         <Stack.Navigator>
           <Stack.Screen
             name="Home"
@@ -44,13 +49,19 @@ export default function App() {
             component={DetailsScreen}
             options={({ route }) => ({ title: route.params.name })}
           />
-          <Stack.Screen
-            name="Settings"
-            component={SettingsScreen}
-            options={{ title: "Settings" }}
-          />
+          <Stack.Screen name="Settings" component={SettingsScreen} />
         </Stack.Navigator>
       </NavigationContainer>
+    </>
+  );
+}
+
+export default function App() {
+  return (
+    <SafeAreaProvider>
+      <ThemeProvider>
+        <AppInner />
+      </ThemeProvider>
     </SafeAreaProvider>
   );
 }
