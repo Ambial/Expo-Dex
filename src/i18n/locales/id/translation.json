@@ -1,0 +1,23 @@
+{
+  "app": { "title": "Pokédex" },
+  "home": {
+    "searchPlaceholder": "Cari Pokémon...",
+    "empty": "Tidak ada Pokémon."
+  },
+  "details": {
+    "info": "Info",
+    "baseStats": "Statistik Dasar",
+    "height": "Tinggi",
+    "weight": "Berat"
+  },
+  "settings": {
+    "title": "Pengaturan",
+    "appearance": "Tampilan",
+    "useSystemTheme": "Gunakan tema sistem",
+    "darkMode": "Mode gelap",
+    "language": "Bahasa",
+    "appLanguage": "Bahasa aplikasi",
+    "about": "Tentang",
+    "aboutText": "Aplikasi demo Pokédex"
+  }
+}

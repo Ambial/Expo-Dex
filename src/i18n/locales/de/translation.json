@@ -1,0 +1,23 @@
+{
+  "app": { "title": "Pokédex" },
+  "home": {
+    "searchPlaceholder": "Pokémon suchen...",
+    "empty": "Keine Pokémon gefunden."
+  },
+  "details": {
+    "info": "Info",
+    "baseStats": "Basiswerte",
+    "height": "Größe",
+    "weight": "Gewicht"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "appearance": "Darstellung",
+    "useSystemTheme": "Systemdesign verwenden",
+    "darkMode": "Dunkelmodus",
+    "language": "Sprache",
+    "appLanguage": "App-Sprache",
+    "about": "Info",
+    "aboutText": "Pokédex Demo-App"
+  }
+}

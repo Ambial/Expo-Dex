@@ -9,6 +9,7 @@ import HomeScreen from "./src/screens/HomeScreen";
 import DetailsScreen from "./src/screens/DetailsScreen";
 import SettingsScreen from "./src/screens/SettingsScreen";
 import { ThemeProvider, useAppTheme } from "./src/theme/ThemeProvider";
+import "./src/i18n/i18n";
 
 export type RootStackParamList = {
   Home: undefined;
