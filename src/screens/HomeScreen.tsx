@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import PokemonCard from "../components/PokemonCard";
+import SearchBar from "../components/SearchBar";
 import {
   PAGE_SIZE,
   PokemonListItem,
@@ -71,7 +72,7 @@ export default function HomeScreen({ navigation }: Props) {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return items;
-    return items.filter((p) => p.name.includes(q));
+    return items.filter((p) => p.name.toLowerCase().includes(q));
   }, [items, query]);
 
   const onCardPress = useCallback(
@@ -89,16 +90,11 @@ export default function HomeScreen({ navigation }: Props) {
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.searchRow}>
-        <TextInput
-          placeholder={t("home.searchPlaceholder")}
+        <SearchBar
           value={query}
           onChangeText={setQuery}
-          style={styles.search}
-          autoCorrect={false}
-          autoCapitalize="none"
-          clearButtonMode="while-editing"
-          placeholderTextColor={colors.textMuted}
-          selectionColor={colors.tint}
+          onClear={() => setQuery("")}
+          placeholder={t("home.searchPlaceholder")}
         />
       </View>
 
