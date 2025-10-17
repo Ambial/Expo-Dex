@@ -12,12 +12,14 @@ import { artworkUri, fetchDetails, PokemonDetails } from "../utils/pokeapi";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "../../App";
 import { useAppTheme } from "../theme/ThemeProvider";
+import { useTranslation } from "react-i18next";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Details">;
 
 export default function DetailsScreen({ route }: Props) {
   const { colors } = useAppTheme();
   const styles = useMemo(() => makeStyles(colors), [colors]);
+  const { t } = useTranslation();
 
   const { id, name } = route.params;
   const [data, setData] = useState<PokemonDetails | null>(null);
@@ -26,8 +28,13 @@ export default function DetailsScreen({ route }: Props) {
   useEffect(() => {
     let mounted = true;
     fetchDetails(id).then(
-      (d) => mounted && setData(d),
-      (e) => mounted && setError(e?.message ?? "Failed to load")
+      (d) => {
+        if (mounted) setData(d);
+      },
+      (e: unknown) => {
+        const message = e instanceof Error ? e.message : "Failed to load";
+        if (mounted) setError(message);
+      }
     );
     return () => {
       mounted = false;
@@ -71,13 +78,17 @@ export default function DetailsScreen({ route }: Props) {
         </View>
 
         <View style={styles.card}>
-          <Text style={styles.sectionTitle}>Info</Text>
-          <Text style={styles.p}>Height: {data.height / 10} m</Text>
-          <Text style={styles.p}>Weight: {data.weight / 10} kg</Text>
+          <Text style={styles.sectionTitle}>{t("details.info")}</Text>
+          <Text style={styles.p}>
+            {t("details.height")}: {data.height / 10} m
+          </Text>
+          <Text style={styles.p}>
+            {t("details.weight")}: {data.weight / 10} kg
+          </Text>
         </View>
 
         <View style={styles.card}>
-          <Text style={styles.sectionTitle}>Base Stats</Text>
+          <Text style={styles.sectionTitle}>{t("details.baseStats")}</Text>
           {data.stats.map((s) => (
             <View key={s.stat.name} style={styles.statRow}>
               <Text style={styles.statName}>{capitalize(s.stat.name)}</Text>

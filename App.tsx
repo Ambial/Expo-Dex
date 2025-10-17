@@ -37,7 +37,6 @@ function AppInner() {
             name="Home"
             component={HomeScreen}
             options={({ navigation }) => ({
-              title: "Pokédex",
               headerRight: () => (
                 <Pressable
                   onPress={() => navigation.navigate("Settings")}

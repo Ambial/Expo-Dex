@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useLayoutEffect,
+} from "react";
 import {
   ActivityIndicator,
   StyleSheet,
@@ -18,7 +24,7 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "../../App";
 import { FlashList } from "@shopify/flash-list";
 import { useAppTheme } from "../theme/ThemeProvider";
-import { Colors } from "../theme/colors";
+import { useTranslation } from "react-i18next";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 
@@ -30,7 +36,12 @@ export default function HomeScreen({ navigation }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const { colors } = useAppTheme();
+  const { t, i18n } = useTranslation();
   const styles = useMemo(() => makeStyles(colors), [colors]);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({ title: t("app.title") });
+  }, [navigation, t, i18n.language]);
 
   const load = useCallback(async (nextOffset: number, replace = false) => {
     setLoading(true);
@@ -39,8 +50,9 @@ export default function HomeScreen({ navigation }: Props) {
       const page = await fetchPage(nextOffset);
       setItems((prev) => (replace ? page : [...prev, ...page]));
       setOffset(nextOffset + PAGE_SIZE);
-    } catch (e: any) {
-      setError(e.message ?? "Network error");
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : "Network error";
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -78,7 +90,7 @@ export default function HomeScreen({ navigation }: Props) {
     <SafeAreaView style={styles.safe}>
       <View style={styles.searchRow}>
         <TextInput
-          placeholder="Search Pokémon..."
+          placeholder={t("home.searchPlaceholder")}
           value={query}
           onChangeText={setQuery}
           style={styles.search}
@@ -113,7 +125,7 @@ export default function HomeScreen({ navigation }: Props) {
           ListEmptyComponent={
             loading ? null : (
               <View style={styles.center}>
-                <Text style={styles.text}>No Pokémon found.</Text>
+                <Text style={styles.text}>{t("home.empty")}</Text>
               </View>
             )
           }
